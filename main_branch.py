@@ -22,6 +22,8 @@ def sim_overtake():
     N_lane = 4
 
 
+
+
     # Initialize controller parameters
     xRef = np.array([0.5,1.8,15,0])
     cons =  Branch_constants(s1=2,s2=3,c2=0.5,tran_diag=0.3,alpha=1,R=1.2,am=am,rm=rm,J_c=20,s_c=1,ylb = 0.,yub = 7.2,L=4, W=2.5,col_alpha=5,Kpsi = 0.1)
@@ -31,7 +33,7 @@ def sim_overtake():
     mpcParam = initBranchMPC(n,d,N,NB,xRef,am,rm,N_lane,cons.W)
     # mpc = robustMPC(mpcParam, model)
     # mpc = BranchMPC(mpcParam, model)
-    mpc = BranchMPC_CVaR(mpcParam, model,ralpha=0.1)
+    mpc = BranchMPC_CVaR(mpcParam, model,ralpha=0.6)
 
     Highway_env_branch.sim_overtake(mpc,N_lane)
 def sim_merge():
@@ -68,10 +70,9 @@ def sim_merge():
     pred_model = [PredictiveModel_merge(n, d, N, backupcons_normal, dt, cons, merge_ref, laneID = 0, N_lane1 = N_lane, N_lane2 = merge_lane),\
                   PredictiveModel_merge(n, d, N, backupcons_merge, dt, cons, merge_ref, laneID = 1, N_lane1 = N_lane, N_lane2 = merge_lane)]
     mpcParam = initBranchMPC(n,d,N,NB,xRef,am,rm,N_lane,cons.W)
-    mpc = BranchMPC_CVaR(mpcParam, pred_model[0],ralpha=0.1)
+    mpc = BranchMPC_CVaR(mpcParam, pred_model[0],ralpha=0.0001)
     Highway_env_branch.sim_merge(mpc,pred_model,N_lane,merge_lane,merge_s,merge_R,merge_side)
 
-
 if __name__== "__main__":
-  # sim_overtake()
-  sim_merge()
+  sim_overtake()
+#   sim_merge()
